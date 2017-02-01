@@ -1,0 +1,7 @@
+*.swp
+*.swo
+*/Apple\ Color\ Emoji.ttf
+*.DS_Store
+build/
+xcuserdata/
+
