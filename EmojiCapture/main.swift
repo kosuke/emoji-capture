@@ -166,7 +166,7 @@ func readPair(_ command: String, from args: inout [String]) -> String? {
 }
 
 func printUsage() {
-    print("Usage: EmojiCapture [option] -o <output_file> text")
+    print("Usage: emojicapture [option] -o <output_file> text")
     print("Options: ")
     print("--font : Specify path to alternative emoji font")
     print("--size : Font size for emojis/full width characters")
