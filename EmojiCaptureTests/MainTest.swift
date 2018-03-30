@@ -35,7 +35,7 @@ class MainTest: XCTestCase {
             capture($0, to: URL(fileURLWithPath: file),
                         with: (48, 40), //(48, 40), (24, 20)
                         using: font)
-            NSWorkspace.shared().openFile(file)
+            NSWorkspace.shared.openFile(file)
         }
         call("🔌", "test0.png")
         //call("😀_--aあ＃あ＃a-+", "test1.png")

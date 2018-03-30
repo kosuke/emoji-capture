@@ -12,7 +12,7 @@ struct EmojiHelper {
     
     // Emoji Combining Sequence
     // http://www.unicode.org/Public/emoji/4.0//emoji-sequences.txt
-    static func isEmojiCombining(_ string: String) -> Bool {
+    static func isEmojiCombining<S: StringProtocol>(_ string: S) -> Bool {
         var it = string.utf16.makeIterator();
         if let first = it.next()?.littleEndian,
             let second = it.next()?.littleEndian,
@@ -26,7 +26,7 @@ struct EmojiHelper {
     
     // Flags
     // https://en.wikipedia.org/wiki/Regional_Indicator_Symbol
-    static func isFlag(_ string: String) -> Bool {
+    static func isFlag<S: StringProtocol>(_ string: S) -> Bool {
         var it = string.unicodeScalars.makeIterator();
         if let first = it.next()?.value,
             let second = it.next()?.value {
@@ -46,7 +46,7 @@ struct EmojiHelper {
     
     static let nonsurrogates: Set<UInt32> = {
         var result: Set<UInt32> = []
-        for c in characters.characters {
+        for c in characters {
             if let s = String(c).unicodeScalars.first?.value {
                 result.insert(s)
             }
@@ -56,7 +56,7 @@ struct EmojiHelper {
     
     // Check the code point range approximately
     // https://en.wikipedia.org/wiki/Emoji#Unicode_blocks
-    static func isEmojiCodePoint(_ s: String) -> Bool {
+    static func isEmojiCodePoint<S: StringProtocol>(_ s: S) -> Bool {
         if let v = s.unicodeScalars.first?.value {
             return (v == 0x000a9 || v == 0x000ae) // ©️, ®️
                 || (0x1f004 <= v && v <= 0x1f9c0) // 🀄 - 🧀
@@ -66,11 +66,11 @@ struct EmojiHelper {
         return false
     }
     
-    static func isEmoji(_ s: String) -> Bool {
+    static func isEmoji<S: StringProtocol>(_ s: S) -> Bool {
         return isEmojiCodePoint(s) || isFlag(s) || isEmojiCombining(s)
     }
     
-    static func isFullWidth(_ s: String) -> Bool {
+    static func isFullWidth<S: StringProtocol>(_ s: S) -> Bool {
         let scalars = s.utf16
         let high = scalars[scalars.startIndex].littleEndian
         return 0x0800 <= high && high <= 0x0fff

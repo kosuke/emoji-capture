@@ -52,8 +52,8 @@ class EmojiCaptureTests: XCTestCase {
         var index = text.startIndex
         while index < text.endIndex {
             let range = text.rangeOfComposedCharacterSequence(at: index)
-            let s = text.substring(with: range)
-            XCTAssertTrue(s.isEmoji(), s)
+            let s = text[range]
+            XCTAssertTrue(s.isEmoji())
             index = range.upperBound
         }
     }

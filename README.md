@@ -1,11 +1,11 @@
 # Emoji Capture
 
-This command line tool is used to generate emoji images for [emojispeak.com](http://emojispeak.com).
+This command line tool is used to generate emoji images for [emojispeak.com](https://emojispeak.com).
 
 # Prerequisites
 
-* macOS 10.12
-* Xcode 8.12
+* macOS 10.13
+* Xcode 9.2
 
 # Build
 

@@ -10,7 +10,7 @@ import Foundation
 import Cocoa
 import CoreGraphics
 
-extension String {
+extension StringProtocol {
     func isEmoji() -> Bool {
         return EmojiHelper.isEmoji(self)
     }
@@ -29,7 +29,7 @@ func calculateDimensions(_ text: String) -> (rows: Int, halfColnmns: Int) {
     var index = text.startIndex // because Swift 3...
     while index < text.endIndex {
         let range = text.rangeOfComposedCharacterSequence(at: index)
-        let s = text.substring(with: range)
+        let s = text[range]
         if s == "\n" {
             rows += 1
             longestColumns = max(columns, longestColumns)
@@ -59,10 +59,10 @@ func createBlankImage(_ width: Int, height: Int) -> CGContext {
 
 func calculateOffsets(_ fullFont: NSFont, _ halfFont: NSFont)
     -> (full: CGFloat, half: CGFloat) {
-    let options : NSStringDrawingOptions = [.usesDeviceMetrics]
+    let options : NSString.DrawingOptions = [NSString.DrawingOptions.usesDeviceMetrics]
     // Baseline offset
     let s = NSAttributedString(string: "😀",
-                               attributes: [NSFontAttributeName : fullFont])
+                               attributes: [NSAttributedStringKey.font : fullFont])
     let bounds = s.boundingRect(with: NSSize.zero, options: options)
     // Centering smaller font
     let offset = (fullFont.pointSize - halfFont.pointSize) / 2
@@ -77,7 +77,7 @@ func draw(text: String, fonts: (full: NSFont, half: NSFont),
         if let v = map[s] {
             return v
         }
-        let a = [NSFontAttributeName : font]
+        let a = [NSAttributedStringKey.font : font]
         let v = NSAttributedString(string: s, attributes: a)
         map[s] = v
         return v
@@ -89,7 +89,7 @@ func draw(text: String, fonts: (full: NSFont, half: NSFont),
     var index = text.startIndex // because Swift 3...
     while index < text.endIndex {
         let range = text.rangeOfComposedCharacterSequence(at: index)
-        let s = text.substring(with: range)
+        let s = text[range]
         // New line
         if s == "\n" {
             row += 1
@@ -103,8 +103,8 @@ func draw(text: String, fonts: (full: NSFont, half: NSFont),
         let x = CGFloat(Float(halfColumn) * cellSize / 2)
         let y = -CGFloat(Float(row + 1) * cellSize)
             + (full ? offsets.full : offsets.half)
-        let options : NSStringDrawingOptions = [.usesDeviceMetrics]
-        let string = attribute(s, font)
+        let options : NSString.DrawingOptions = [NSString.DrawingOptions.usesDeviceMetrics]
+        let string = attribute(String(s), font)
         string.draw(with: NSRect(x: x,
                                  y: y,
                                  width:  CGFloat(font.pointSize),
@@ -131,7 +131,7 @@ func capture(_ text: String, to url: URL, with fontSize: (Int, Int),
     let context = createBlankImage(dimensions.halfColnmns * cellSize / 2,
                                    height: dimensions.rows * cellSize)
     let nsgc = NSGraphicsContext(cgContext: context, flipped: false)
-    NSGraphicsContext.setCurrent(nsgc)
+    NSGraphicsContext.current = nsgc
     draw(text:text, fonts: (full: fullFont, half: halfFont), cellSize: Float(cellSize))
     let img = context.makeImage()! as CGImage
     let destination = CGImageDestinationCreateWithURL(url as CFURL, kUTTypePNG, 1, nil)!
@@ -146,7 +146,7 @@ func loadFont(from url: URL, in size: Int) -> NSFont? {
         return nil;
     }
     let cgFont = CGFont(dataProvider);
-    let cfFont = CTFontCreateWithGraphicsFont(cgFont, CGFloat(size), nil, nil);
+    let cfFont = CTFontCreateWithGraphicsFont(cgFont!, CGFloat(size), nil, nil);
     return cfFont as NSFont;
 }
 
